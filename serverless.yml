@@ -1,0 +1,44 @@
+service: serverless-example
+
+plugins:
+  - serverless-plugin-optimize
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: ap-southeast-1
+  profile: Local
+  timeout: 30
+  memorySize: 2048
+
+package:
+  exclude:
+    - .git/**
+    - .vscode/**
+    - .cirlceci/**
+
+functions:
+  dog:
+    handler: dist/serverless.dogHandler
+    events:
+      - http:
+          method: ANY
+          path: /dog
+  cat:
+    handler: dist/serverless.catHandler
+    events:
+      - http:
+          method: ANY
+          path: /cat
+  swagger:
+    handler: dist/main.swaggerHandler
+    events:
+      - http:
+          method: ANY
+          path: /api/{any+}
+
+custom:
+  optimize:
+    external: ['swagger-ui-dist']
